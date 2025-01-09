@@ -13,6 +13,12 @@ VALUES
 */
 
 INSERT INTO
-    photos (img_url, user_id)
+    photos (url, user_id)
 VALUES
     ('img14.jpg', NULL)
+
+
+INSERT INTO
+    users (username)
+VALUES
+    ('null user')
