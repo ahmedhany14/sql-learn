@@ -7,7 +7,9 @@
     <file url="file://$PROJECT_DIR$/basics/insert-statment.sql" dialect="PostgreSQL" />
     <file url="file://$PROJECT_DIR$/drop.sql" dialect="PostgreSQL" />
     <file url="file://$PROJECT_DIR$/e-commerce/e-commerce.practice.sql" dialect="PostgreSQL" />
+    <file url="file://$PROJECT_DIR$/e-commerce/offset-limmt.sql" dialect="PostgreSQL" />
     <file url="file://$PROJECT_DIR$/e-commerce/sorting.sql" dialect="PostgreSQL" />
+    <file url="file://$PROJECT_DIR$/e-commerce/union-intersections-except.sql" dialect="PostgreSQL" />
     <file url="file://$PROJECT_DIR$/joins and relations/joins.sql" dialect="PostgreSQL" />
     <file url="file://$PROJECT_DIR$/tables/e-commerce.sql" dialect="PostgreSQL" />
   </component>
