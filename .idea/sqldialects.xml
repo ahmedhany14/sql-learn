@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="SqlDialectMappings">
-    <file url="file://$PROJECT_DIR$/Grouping and Aggregations /grouping-aggregations.sql" dialect="PostgreSQL" />
+    <file url="file://$PROJECT_DIR$/Grouping and Aggregations /aggregaction.sql" dialect="PostgreSQL" />
+    <file url="file://$PROJECT_DIR$/Grouping and Aggregations /grouping.sql" dialect="PostgreSQL" />
     <file url="file://$PROJECT_DIR$/basics/insert-statment.sql" dialect="PostgreSQL" />
     <file url="file://$PROJECT_DIR$/joins and relations/joins.sql" dialect="PostgreSQL" />
   </component>
