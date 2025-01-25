@@ -1,40 +1,38 @@
 CREATE TABLE users
 (
-    id           SERIAL PRIMARY KEY,
-    created_at   TIMESTAMP                                               DEFAULT CURRENT_TIMESTAMP,
-    updated_at   TIMESTAMP                                               DEFAULT CURRENT_TIMESTAMP,
-    username     VARCHAR(40)  NOT NULL UNIQUE,
-    email        VARCHAR(40)  NOT NULL UNIQUE
-        CONSTRAINT email_check CHECK (email ~* '^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$'),
-    bio          VARCHAR(256) NOT NULL                                   DEFAULT '',
-    phone_number VARCHAR(15),
-    password     VARCHAR(40)  NOT NULL,
-
-    status       VARCHAR(10)
-        CONSTRAINT status_check CHECK (status IN ('active', 'inactive')) DEFAULT 'active'
+    id         SERIAL PRIMARY KEY,
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
+    username   VARCHAR(40) NOT NULL,
+    bio        VARCHAR(1024)            DEFAULT '',
+    avatar     VARCHAR(256),
+    phone      VARCHAR(50),
+    email      VARCHAR(40),
+    password   VARCHAR(50),
+    status     VARCHAR(50),
+    CHECK ( coalesce(phone, email) IS NOT NULL )
 );
-
 
 CREATE TABLE posts
 (
     id         SERIAL PRIMARY KEY,
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    url        VARCHAR(125) NOT NULL,
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
+    url        VARCHAR(256) NOT NULL,
     caption    VARCHAR(1024),
     lng        REAL
-        CONSTRAINT lng_check CHECK ((lng IS NULL) OR (lng >= -180 AND lng <= 180)),
+        CHECK ((lng IS NULL) OR (lng >= -180 AND lng <= 180)),
     lat        REAL
-        CONSTRAINT lat_check CHECK ((lat IS NULL) OR (lat >= -90 AND lat <= 90)),
+        CHECK ((lat IS NULL) OR (lat >= -90 AND lat <= 90)),
     user_id    INTEGER      NOT NULL REFERENCES users (id) ON DELETE CASCADE
 );
 
 CREATE TABLE comments
 (
     id         SERIAL PRIMARY KEY,
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    content    VARCHAR(1024) NOT NULL,
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
+    contents   VARCHAR(1024) NOT NULL,
     user_id    INTEGER       NOT NULL REFERENCES users (id) ON DELETE CASCADE,
     post_id    INTEGER       NOT NULL REFERENCES posts (id) ON DELETE CASCADE
 );
@@ -42,6 +40,7 @@ CREATE TABLE comments
 CREATE TABLE likes
 (
     id         SERIAL PRIMARY KEY,
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
     user_id    INTEGER NOT NULL REFERENCES users (id) ON DELETE CASCADE,
     post_id    INTEGER REFERENCES posts (id) ON DELETE CASCADE,
     comment_id INTEGER REFERENCES comments (id) ON DELETE CASCADE,
@@ -52,48 +51,48 @@ CREATE TABLE likes
     UNIQUE (user_id, post_id, comment_id)
 );
 
-CREATE TABLE photo_tage
+CREATE TABLE photo_tags
 (
     id         SERIAL PRIMARY KEY,
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    x          REAL    NOT NULL,
-    y          REAL    NOT NULL,
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
     post_id    INTEGER NOT NULL REFERENCES posts (id) ON DELETE CASCADE,
     user_id    INTEGER NOT NULL REFERENCES users (id) ON DELETE CASCADE,
-    UNIQUE (x, y, post_id, user_id)
+    x          INTEGER NOT NULL,
+    y          INTEGER NOT NULL,
+    UNIQUE (post_id, user_id)
 );
 
 CREATE TABLE caption_tags
 (
     id         SERIAL PRIMARY KEY,
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    post_id    INTEGER NOT NULL REFERENCES posts (id) ON DELETE CASCADE,
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
     user_id    INTEGER NOT NULL REFERENCES users (id) ON DELETE CASCADE,
+    post_id    INTEGER NOT NULL REFERENCES posts (id) ON DELETE CASCADE,
     UNIQUE (post_id, user_id)
 );
 
 CREATE TABLE hashtags
 (
     id         SERIAL PRIMARY KEY,
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
     title      VARCHAR(40) NOT NULL UNIQUE
 );
 
-CREATE TABLE hashtag_post
+CREATE TABLE hashtags_posts
 (
     id         SERIAL PRIMARY KEY,
-    post_id    INTEGER NOT NULL REFERENCES posts (id) ON DELETE CASCADE,
     hashtag_id INTEGER NOT NULL REFERENCES hashtags (id) ON DELETE CASCADE,
+    post_id    INTEGER NOT NULL REFERENCES posts (id) ON DELETE CASCADE,
     UNIQUE (post_id, hashtag_id)
 );
+
 
 CREATE TABLE followers
 (
     id          SERIAL PRIMARY KEY,
-    created_at  TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    user_id     INTEGER NOT NULL REFERENCES users (id) ON DELETE CASCADE,
+    created_at  TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
+    leader_id   INTEGER NOT NULL REFERENCES users (id) ON DELETE CASCADE,
     follower_id INTEGER NOT NULL REFERENCES users (id) ON DELETE CASCADE,
-    CHECK ( user_id != follower_id ),
-    UNIQUE (user_id, follower_id)
-)
+    UNIQUE (leader_id, follower_id)
+); 
