@@ -1,0 +1,55 @@
+how data is stored in PostgresSQL:
+each database has a directory in the data directory, and each table has a file in the database directory.
+each table has a file in the database directory called heap file.
+heap file divided into pages or blocks, each page has a fixed size of 8KB.
+each page has a header and a body, the header contains metadata about the page, and the body contains the actual data.
+the body is divided into tuples, each tuple represents a row in the table.
+the data is stored in the disc in a binary format.
+
+After the data is stored in the disc, the data is loaded into the memory when the query is executed.
+When we query the data, we can use indexes to speed up the query.
+But how does the index work?
+Let's imagine we have this table:
+name        age
+----------------
+john        20
+alice       25
+bob         30
+carol       35
+david       40
+
+and the data stored in the disc in this format:
+
+Block 0:
+    john 20
+    alice 25
+Block 1:
+    bob 30
+    carol 35
+
+Block 2:
+    david 40
+
+and we run this query:
+    select * from users where name = 'bob';
+
+i need to scan all the blocks to find the row that has the name 'bob'
+
+Now I know that 'bob' is in block 1, at index 0, I want some way to find the row faster.
+The solution is to use an index.
+
+after using an index on the name, it takes the name and map the data like this:
+john -> block 0, index 0
+alice -> block 0, index 1
+bob -> block 1, index 0
+carol -> block 1, index 1
+david -> block 2, index 0
+
+Then sort the data based on the name, and store the data in a binary tree.
+So after storing the data it looks like this:
+alice -> block 0, index 1
+bob -> block 1, index 0
+carol -> block 1, index 1
+david -> block 2, index 0
+john -> block 0, index 0
+when we run the query, it goes to the binary tree and finds the row faster.
