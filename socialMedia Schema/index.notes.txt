@@ -53,3 +53,39 @@ carol -> block 1, index 1
 david -> block 2, index 0
 john -> block 0, index 0
 when we run the query, it goes to the binary tree and finds the row faster.
+
+
+indexes types:
+1. b-tree:
+    use a balanced tree to store the data.
+    very efficient for equality and range queries like (=, <, >, BETWEEN).
+    efficient for sorting and ordering.
+    usually used with where clause.
+
+2. hash:
+    used to transform a value into a hash key.
+    very efficient for equality queries like (=).
+    not efficient for range queries.
+    usually used with where clause.
+    very efficient for searching for a unique value and primary keys.
+
+3. GIN (Generalized Inverted Index):
+    used for indexing composite values like JSON.
+    fast for searching for a value in a composite value like JSON or array.
+
+
+4. GiST (Generalized Search Tree):
+    used for indexing geometric data types and range types.
+    perfect for range queries and geospatial data, and searching for a value in a range.
+
+5. SP-GiST (Space-Partitioned Generalized Search Tree):
+    used for indexing space-partitioned data.
+    splendid for indexing multidimensional data.
+    efficient for querying prefix and suffix of a string and pattern matching.
+
+
+6. BRIN (Block Range Indexes):
+    used for indexing large tables.
+    very efficient for large tables.
+    used with time-series data and log data.
+    divide the table into blocks and store the minimum and maximum value of each block.
